@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Layout, Menu, theme } from 'antd';
 import Link from 'next/link';
-import { PanelLeftClose, PanelLeftOpen, Mail, TrendingUpDown, FileText, UserRoundCog } from 'lucide-react';
+import { PanelLeftClose, PanelLeftOpen, Mail, TrendingUpDown, FileText, UserRoundCog, Cog, Activity } from 'lucide-react';
 import { isMobile } from '../utils/isMobile';
 
 const { Sider, Content } = Layout;
@@ -69,20 +69,27 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 }}
             >
                 {/* Flex container for the Menu */}
+                <div className='flex gap-2 items-center n  p-4 border-b-2 border-gray-200'> 
+                    <img src='/mh_logo.png' className='min-w-7 max-w-7' />
+                    
+                    {!collapsed && (
+            <h1 className="text-xl font-bold text-gray-800">MedicalHunt</h1>
+          )}
+                    </div>
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', paddingBottom: 24 }}>
                     <Menu
                         theme="light"
                         mode="inline"
                         style={{ flex: 1, fontSize: '16px', fontWeight: 500 }}
                         selectedKeys={[selectedKey]} // Dynamically set the selected key
-                        onClick={({ key }) => setSelectedKey(key)} 
+                        onClick={({ key }) => setSelectedKey(key)}
                         items={[
                             {
                                 key: 'Dashboard',
                                 label: collapsed ? null : 'Dashboard',
                                 type: 'group',
                                 children: [
-                                    { key: '1', icon: <Mail />, label:(<Link href="/dashboard/notifications" passHref>Notifications </Link>) },
+                                    { key: '1', icon: <Mail />, label: (<Link href="/dashboard/notifications" passHref>Notifications </Link>) },
                                     { key: '2', icon: <TrendingUpDown />, label: (<Link href="/dashboard/analyse-results" passHref>Analyse Results </Link>) },
                                     { key: '3', icon: <FileText />, label: (<Link href="/dashboard/resources" passHref>Resources </Link>) },
                                 ],
@@ -100,9 +107,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                                 label: collapsed ? null : 'Account Management',
                                 type: 'group',
                                 children: [
-                                    { key: '13', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>) , icon: <UserRoundCog /> },
-                                    { key: '14', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>), icon: <UserRoundCog /> },
-                                    
+                                    { key: '13', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>), icon: <UserRoundCog /> },
+                                    { key: '14', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>), icon: <Cog /> },
+
                                 ],
                             },
                         ]}
