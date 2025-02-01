@@ -1,4 +1,4 @@
-import AppLayout  from  './AppLayout';
+import AppLayout  from  '../../AppLayout';
 import { fileURLToPath } from 'url';
 import path from 'path';
 
@@ -12,7 +12,7 @@ export default function Home() {
     <AppLayout > 
     <div className="flex items-center justify-center h-screen">
       <div className="text-center">
-        ⚠️ This is {dirName},  authentication yet to be implemented
+        ⚠️ This is  {dirName}, authentication yet to be implemented
       </div>
     </div>
     </AppLayout>

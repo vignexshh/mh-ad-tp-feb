@@ -1,7 +1,7 @@
 'use client';
-
 import React, { useState, useEffect } from 'react';
 import { Button, Layout, Menu, theme } from 'antd';
+import Link from 'next/link';
 import { PanelLeftClose, PanelLeftOpen, Mail, TrendingUpDown, FileText, UserRoundCog } from 'lucide-react';
 import { isMobile } from '../utils/isMobile';
 
@@ -12,10 +12,10 @@ interface AppLayoutProps {
 }
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+    const [selectedKey, setSelectedKey] = useState('1');
     const [collapsed, setCollapsed] = useState<boolean>(false);
     const [windowSize, setWindowSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
     const [isMobileDevice, setIsMobileDevice] = useState<boolean>(false);
-
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -28,10 +28,8 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 height: window.innerHeight,
             });
         };
-
         window.addEventListener('resize', handleResize);
         handleResize(); // Call once to set initial size
-
         return () => {
             window.removeEventListener('resize', handleResize);
         };
@@ -45,12 +43,10 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
     // Determine the filter value based on conditions
     let filterValue = 'none'; // Default filter value
-
     if (isMobileDevice && collapsed) {
         filterValue = 'blur(0px)';
     } else if (isMobileDevice && !collapsed) {
         filterValue = 'blur(5px)';
-        
     }
 
     return (
@@ -62,30 +58,33 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 collapsible
                 collapsed={collapsed}
                 collapsedWidth={58}
+                onMouseEnter={() => setCollapsed(false)} // Expand the sider when hovered
+                onMouseLeave={() => setCollapsed(true)} // Collapse the sider when the mouse leaves
                 style={{
                     position: 'fixed',
                     height: '100vh',
                     zIndex: 1, // Ensure it stays above other content
                     backgroundColor: colorBgContainer,
+                    transition: 'all 0.3s ease', // Smooth transition for collapsing/expanding
                 }}
             >
                 {/* Flex container for the Menu */}
                 <div style={{ display: 'flex', flexDirection: 'column', height: '100%', paddingBottom: 24 }}>
-                    
                     <Menu
                         theme="light"
                         mode="inline"
                         style={{ flex: 1, fontSize: '16px', fontWeight: 500 }}
-                        defaultSelectedKeys={['1']}
+                        selectedKeys={[selectedKey]} // Dynamically set the selected key
+                        onClick={({ key }) => setSelectedKey(key)} 
                         items={[
                             {
                                 key: 'Dashboard',
                                 label: collapsed ? null : 'Dashboard',
                                 type: 'group',
                                 children: [
-                                    { key: '1', icon: <Mail />, label: 'Notifications' },
-                                    { key: '2', icon: <TrendingUpDown />, label: 'Analyse Results' },
-                                    { key: '3', icon: <FileText />, label: 'Resources' },
+                                    { key: '1', icon: <Mail />, label:(<Link href="/dashboard/notifications" passHref>Notifications </Link>) },
+                                    { key: '2', icon: <TrendingUpDown />, label: (<Link href="/dashboard/analyse-results" passHref>Analyse Results </Link>) },
+                                    { key: '3', icon: <FileText />, label: (<Link href="/dashboard/resources" passHref>Resources </Link>) },
                                 ],
                             },
                         ]}
@@ -101,16 +100,15 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                                 label: collapsed ? null : 'Account Management',
                                 type: 'group',
                                 children: [
-                                    { key: '13', label: 'Settings', icon: <UserRoundCog /> },
-                                    { key: '14', label: 'Settings', icon: <UserRoundCog /> },
-                                    { key: '15', label: 'Settings', icon: <UserRoundCog /> },
+                                    { key: '13', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>) , icon: <UserRoundCog /> },
+                                    { key: '14', label: (<Link href="/dashboard/account" passHref>Manage Account </Link>), icon: <UserRoundCog /> },
+                                    
                                 ],
                             },
                         ]}
                     />
                 </div>
             </Sider>
-
             {/* Main Content */}
             <Layout style={{ marginLeft: collapsed ? 48 : 300 }}>
                 <div style={{ position: 'fixed', zIndex: 1 }}>
@@ -127,18 +125,18 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                         }}
                     />
                 </div>
-
                 <Content
                     style={{
                         marginTop: 74, // Offset for the fixed Header
                         marginLeft: 16,
                         marginRight: 16,
-                        padding: 24,
+                        padding: 2,
                         minHeight: '100vh',
                         background: colorBgContainer,
                         borderRadius: borderRadiusLG,
-                        overflowY: 'auto', // Allow scrolling
-                        filter: filterValue, // Apply the calculated filter
+                        overflowY: 'auto',
+                        filter: filterValue,
+                        transition: 'filter 0.2s ease-in', // Add smooth blur transition
                     }}
                 >
                     {children}
